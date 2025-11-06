@@ -4,38 +4,45 @@ import TaskPreview from './components/TaskPreview';
 import HabitLoops from './components/HabitLoops';
 import FocusTimer from './components/FocusTimer';
 
-function App() {
+export default function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-zinc-50 to-white dark:from-black dark:to-zinc-950 text-zinc-900 dark:text-zinc-100">
-      <div className="mx-auto max-w-6xl px-4 py-6 md:py-10">
-        <header className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-600" />
-            <span className="text-lg font-semibold">Loopify</span>
-          </div>
-          <div className="text-sm text-zinc-500 dark:text-zinc-400">Calm habits • Focused flow</div>
-        </header>
+    <div className="min-h-screen bg-slate-950 text-slate-100">
+      <header className="max-w-6xl mx-auto px-6 py-6 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+          <span className="font-semibold">Loopify</span>
+        </div>
+        <nav className="hidden md:flex items-center gap-6 text-white/70">
+          <a className="hover:text-white" href="#">Tasks</a>
+          <a className="hover:text-white" href="#">Habits</a>
+          <a className="hover:text-white" href="#">Focus</a>
+          <a className="hover:text-white" href="#">Insights</a>
+        </nav>
+        <button className="px-4 py-2 rounded-xl bg-white text-slate-900 text-sm font-medium">Get Started</button>
+      </header>
 
+      <main className="max-w-6xl mx-auto px-6 space-y-10 pb-16">
         <HeroCover />
 
-        <main className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="md:col-span-2 space-y-6">
             <TaskPreview />
             <HabitLoops />
           </div>
-          <div className="lg:col-span-1">
+          <div>
             <FocusTimer />
+            <div className="mt-6 rounded-2xl border border-slate-200/10 bg-gradient-to-br from-emerald-400/10 via-cyan-400/10 to-fuchsia-400/10 p-6">
+              <p className="text-white/80 leading-relaxed">
+                "Small loops, big change." Keep your streaks alive and your focus sessions consistent. Your future self is cheering for you.
+              </p>
+            </div>
           </div>
-        </main>
-
-        <section className="mt-10 rounded-2xl border border-zinc-200/50 dark:border-white/10 bg-white/60 dark:bg-white/5 backdrop-blur p-5 text-center">
-          <p className="text-sm md:text-base text-zinc-700 dark:text-zinc-300">
-            “You’re getting stronger with every loop. Small steps today, big change tomorrow.”
-          </p>
         </section>
-      </div>
+      </main>
+
+      <footer className="max-w-6xl mx-auto px-6 pb-10 text-center text-white/50">
+        Made with calm energy. © {new Date().getFullYear()} Loopify
+      </footer>
     </div>
   );
 }
-
-export default App;
