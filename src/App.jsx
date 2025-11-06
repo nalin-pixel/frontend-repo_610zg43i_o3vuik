@@ -1,47 +1,49 @@
 import React from 'react';
 import HeroCover from './components/HeroCover';
-import TaskPreview from './components/TaskPreview';
-import HabitLoops from './components/HabitLoops';
+import CoachChat from './components/CoachChat';
+import InsightsDashboard from './components/InsightsDashboard';
 import FocusTimer from './components/FocusTimer';
+import HabitLoops from './components/HabitLoops';
+import TaskPreview from './components/TaskPreview';
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
-      <header className="max-w-6xl mx-auto px-6 py-6 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-          <span className="font-semibold">Loopify</span>
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white text-slate-900">
+      <header className="mx-auto max-w-6xl px-4 py-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 rounded-lg bg-slate-900" />
+            <span className="text-lg font-semibold tracking-tight">Loopify</span>
+          </div>
+          <nav className="hidden gap-6 text-sm text-slate-500 md:flex">
+            <a href="#coach" className="hover:text-slate-900">Coach</a>
+            <a href="#insights" className="hover:text-slate-900">Insights</a>
+            <a href="#focus" className="hover:text-slate-900">Focus</a>
+          </nav>
         </div>
-        <nav className="hidden md:flex items-center gap-6 text-white/70">
-          <a className="hover:text-white" href="#">Tasks</a>
-          <a className="hover:text-white" href="#">Habits</a>
-          <a className="hover:text-white" href="#">Focus</a>
-          <a className="hover:text-white" href="#">Insights</a>
-        </nav>
-        <button className="px-4 py-2 rounded-xl bg-white text-slate-900 text-sm font-medium">Get Started</button>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 space-y-10 pb-16">
+      <main className="mx-auto max-w-6xl space-y-8 px-4 pb-12">
         <HeroCover />
 
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="md:col-span-2 space-y-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
+          <div className="space-y-6 md:col-span-7">
+            <CoachChat />
             <TaskPreview />
+          </div>
+          <div className="space-y-6 md:col-span-5">
+            <FocusTimer />
             <HabitLoops />
           </div>
-          <div>
-            <FocusTimer />
-            <div className="mt-6 rounded-2xl border border-slate-200/10 bg-gradient-to-br from-emerald-400/10 via-cyan-400/10 to-fuchsia-400/10 p-6">
-              <p className="text-white/80 leading-relaxed">
-                "Small loops, big change." Keep your streaks alive and your focus sessions consistent. Your future self is cheering for you.
-              </p>
-            </div>
-          </div>
-        </section>
+        </div>
+
+        <div id="insights">
+          <InsightsDashboard />
+        </div>
       </main>
 
-      <footer className="max-w-6xl mx-auto px-6 pb-10 text-center text-white/50">
-        Made with calm energy. © {new Date().getFullYear()} Loopify
+      <footer className="border-t border-slate-200/60 py-8 text-center text-sm text-slate-500">
+        Built with care — stay in the loop.
       </footer>
     </div>
   );
