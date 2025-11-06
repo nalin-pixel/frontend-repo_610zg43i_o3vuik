@@ -1,28 +1,41 @@
-import { useState } from 'react'
+import React from 'react';
+import HeroCover from './components/HeroCover';
+import TaskPreview from './components/TaskPreview';
+import HabitLoops from './components/HabitLoops';
+import FocusTimer from './components/FocusTimer';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          Vibe Coding Platform
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Your AI-powered development environment
-        </p>
-        <div className="text-center">
-          <button
-            onClick={() => setCount(count + 1)}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-          >
-            Count is {count}
-          </button>
-        </div>
+    <div className="min-h-screen bg-gradient-to-b from-zinc-50 to-white dark:from-black dark:to-zinc-950 text-zinc-900 dark:text-zinc-100">
+      <div className="mx-auto max-w-6xl px-4 py-6 md:py-10">
+        <header className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-600" />
+            <span className="text-lg font-semibold">Loopify</span>
+          </div>
+          <div className="text-sm text-zinc-500 dark:text-zinc-400">Calm habits • Focused flow</div>
+        </header>
+
+        <HeroCover />
+
+        <main className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-6">
+            <TaskPreview />
+            <HabitLoops />
+          </div>
+          <div className="lg:col-span-1">
+            <FocusTimer />
+          </div>
+        </main>
+
+        <section className="mt-10 rounded-2xl border border-zinc-200/50 dark:border-white/10 bg-white/60 dark:bg-white/5 backdrop-blur p-5 text-center">
+          <p className="text-sm md:text-base text-zinc-700 dark:text-zinc-300">
+            “You’re getting stronger with every loop. Small steps today, big change tomorrow.”
+          </p>
+        </section>
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
