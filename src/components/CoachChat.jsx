@@ -1,113 +1,94 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Send, Bot, User } from 'lucide-react';
 
-const BACKEND = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
-
-function useSessionId() {
-  return useMemo(() => {
-    let id = localStorage.getItem('loopify_session_id');
-    if (!id) {
-      id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-      localStorage.setItem('loopify_session_id', id);
-    }
-    return id;
-  }, []);
-}
+const API_BASE = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
 
 export default function CoachChat() {
-  const sessionId = useSessionId();
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([
+    { role: 'assistant', content: 'Hey! What loop are we closing today?' },
+  ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const endRef = useRef(null);
+  const listRef = useRef(null);
 
   useEffect(() => {
-    fetch(`${BACKEND}/api/coach/messages?session_id=${encodeURIComponent(sessionId)}`)
-      .then((r) => r.json())
-      .then((data) => setMessages(data))
-      .catch(() => {});
-  }, [sessionId]);
-
-  useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (listRef.current) {
+      listRef.current.scrollTop = listRef.current.scrollHeight;
+    }
   }, [messages]);
 
-  const sendMessage = async () => {
-    const content = input.trim();
-    if (!content) return;
+  const sendMessage = async (e) => {
+    e.preventDefault();
+    if (!input.trim() || loading) return;
+
+    const newMessages = [...messages, { role: 'user', content: input }];
+    setMessages(newMessages);
     setInput('');
     setLoading(true);
+
     try {
-      const res = await fetch(`${BACKEND}/api/coach/message`, {
+      const res = await fetch(`${API_BASE}/api/coach/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ session_id: sessionId, role: 'user', content }),
+        body: JSON.stringify({ message: input }),
       });
+      if (!res.ok) throw new Error('Network response was not ok');
       const data = await res.json();
-      if (data?.messages) {
-        setMessages((prev) => [...prev, ...data.messages]);
-      }
-    } catch (e) {
-      // ignore
+      setMessages((prev) => [...prev, { role: 'assistant', content: data.reply || 'Got it! Let\'s plan the next step.' }]);
+    } catch (err) {
+      setMessages((prev) => [...prev, { role: 'assistant', content: 'I\'m having trouble reaching the server. Try setting VITE_BACKEND_URL.' }]);
     } finally {
       setLoading(false);
     }
   };
 
-  const onKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
-  };
-
   return (
-    <section id="coach" className="rounded-xl bg-white/70 backdrop-blur border border-slate-200/60 shadow-sm">
-      <div className="flex items-center gap-2 border-b border-slate-200/60 px-4 py-3">
-        <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-white">
-          <Bot size={18} />
-        </div>
-        <h2 className="text-sm font-semibold tracking-wide text-slate-900">Loop Coach</h2>
-        <span className="ml-auto text-xs text-slate-500">Your gentle, practical guide</span>
+    <section className="flex h-full flex-col rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div className="flex items-center gap-2 border-b border-slate-200 px-4 py-3">
+        <Bot className="h-4 w-4 text-slate-700" />
+        <h3 className="text-sm font-semibold text-slate-800">AI Coach</h3>
       </div>
 
-      <div className="max-h-[340px] overflow-y-auto px-4 py-3 space-y-3">
-        {messages.length === 0 && (
-          <div className="text-sm text-slate-500">
-            Say hi and tell the coach what you want to focus on today.
-          </div>
-        )}
-        {messages.map((m) => (
-          <div key={m.id || m.created_at} className={`flex items-start gap-2 ${m.role === 'assistant' ? '' : 'flex-row-reverse'}`}>
-            <div className={`mt-1 inline-flex h-7 w-7 items-center justify-center rounded-full ${m.role === 'assistant' ? 'bg-slate-900 text-white' : 'bg-slate-200 text-slate-700'}`}>
-              {m.role === 'assistant' ? <Bot size={16} /> : <User size={16} />}
-            </div>
-            <div className={`max-w-[80%] rounded-2xl px-3 py-2 text-sm leading-relaxed shadow ${m.role === 'assistant' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-800'}`}>
+      <div ref={listRef} className="min-h-[220px] flex-1 space-y-3 overflow-y-auto px-4 py-4">
+        {messages.map((m, idx) => (
+          <div key={idx} className={`flex items-start gap-2 ${m.role === 'user' ? 'justify-end' : ''}`}>
+            {m.role === 'assistant' && (
+              <div className="mt-0.5 rounded-full bg-slate-100 p-1">
+                <Bot className="h-4 w-4 text-slate-700" />
+              </div>
+            )}
+            <div className={`max-w-[80%] rounded-xl px-3 py-2 text-sm shadow-sm ${
+              m.role === 'user' ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-800'
+            }`}>
               {m.content}
             </div>
+            {m.role === 'user' && (
+              <div className="mt-0.5 rounded-full bg-slate-900 p-1 text-white">
+                <User className="h-4 w-4" />
+              </div>
+            )}
           </div>
         ))}
-        <div ref={endRef} />
+        {loading && (
+          <div className="text-center text-xs text-slate-500">Thinking…</div>
+        )}
       </div>
 
-      <div className="flex items-center gap-2 border-t border-slate-200/60 px-3 py-3">
-        <textarea
+      <form onSubmit={sendMessage} className="flex items-center gap-2 border-t border-slate-200 p-3">
+        <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={onKeyDown}
-          rows={1}
-          placeholder="Ask for a plan, clarity, or a nudge…"
-          className="flex-1 resize-none rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/10"
+          placeholder="Ask for a plan, break down tasks, or get tips…"
+          className="flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none ring-0 placeholder:text-slate-400 focus:border-slate-300"
         />
         <button
-          onClick={sendMessage}
           disabled={loading}
-          className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white shadow hover:bg-slate-800 disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-slate-800 disabled:opacity-50"
         >
-          <Send size={16} />
+          <Send className="h-4 w-4" />
           Send
         </button>
-      </div>
+      </form>
     </section>
   );
 }

@@ -1,39 +1,38 @@
 import React from 'react';
 import Spline from '@splinetool/react-spline';
-import { Rocket, Play } from 'lucide-react';
+import { Rocket, Sparkles } from 'lucide-react';
 
 export default function HeroCover() {
   return (
-    <section className="relative w-full h-[60vh] md:h-[70vh] rounded-3xl overflow-hidden bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800">
-      <div className="absolute inset-0">
+    <section className="relative w-full overflow-hidden rounded-2xl bg-gradient-to-b from-slate-50 to-white shadow-sm">
+      <div className="h-[380px] w-full">
         <Spline
-          scene="https://prod.spline.design/6ZtHjKfX3I8s7w0R/scene.splinecode"
+          scene="https://prod.spline.design/6h7eIYkKzqz8c1nP/scene.splinecode"
           style={{ width: '100%', height: '100%' }}
         />
+        {/* Soft gradient overlay that doesn't block interactions */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-white/70 via-white/20 to-transparent" />
       </div>
 
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-slate-950/40 via-slate-900/40 to-slate-950/80" />
-
-      <div className="relative z-10 h-full flex items-center justify-center text-center px-6">
-        <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur text-white/80 text-xs mb-4">
-            <Rocket size={14} />
-            <span>Loopify • Focus on what matters</span>
+      <div className="px-6 pb-8 pt-6 md:px-10">
+        <div className="mx-auto max-w-3xl text-center">
+          <div className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
+            <Sparkles className="h-3.5 w-3.5" />
+            AI-powered productivity loops
           </div>
-          <h1 className="text-4xl md:text-6xl font-semibold tracking-tight text-white">
-            Build habits. Stay in flow.
+          <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
+            Loopify — Focus, build habits, and close the loop
           </h1>
-          <p className="mt-4 text-base md:text-lg text-white/80 leading-relaxed">
-            An Apple-inspired companion for tasks, habits, and mindful focus. Elegant, light, and distraction-free.
+          <p className="mt-3 text-slate-600 md:text-lg">
+            A minimal workspace with an AI coach, tasks, habit loops, and insights to help you get into flow.
           </p>
-
-          <div className="mt-8 flex items-center justify-center gap-3">
-            <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-slate-900 font-medium shadow/10 shadow-white/10 hover:shadow-white/20 transition">
-              <Play size={16} />
-              Start Focus
+          <div className="mt-5 flex items-center justify-center gap-3">
+            <button className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-slate-800">
+              <Rocket className="h-4 w-4" />
+              Start a focus session
             </button>
-            <button className="px-5 py-2.5 rounded-xl border border-white/20 text-white hover:bg-white/10 transition">
-              Explore Habits
+            <button className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50">
+              Explore insights
             </button>
           </div>
         </div>
